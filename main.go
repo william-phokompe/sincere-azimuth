@@ -34,7 +34,17 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 
 // Get single book
 func getBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r) // Get params
+	// Loop through books and find with id
 
+	for _, item := range books {
+		if item.ID == params["id"] {
+			json.NewEncoder(w).Encode(item)
+			return
+		}
+	}
+	json.NewEncoder(w).Encode(&Book{})
 }
 
 // Create a book
@@ -59,7 +69,7 @@ func main() {
 	// Mock Data - @todo - implement DB
 	books = append(books, Book{ID: "1", Isbn: "448743", Title: "Book One",
 		Author: &Author{Firstname: "John", Lastname: "Doe"}})
-	books = append(books, Book{ID: "21", Isbn: "847564", Title: "Book Two",
+	books = append(books, Book{ID: "2", Isbn: "847564", Title: "Book Two",
 		Author: &Author{Firstname: "Steve", Lastname: "Smith"}})
 
 	// Route Handlers / Enpoints
